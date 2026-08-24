@@ -1,0 +1,16 @@
+# 缠论 A 股量化交易策略系统 — 依赖清单
+# Python 3.10+（作者环境 3.12，Windows 原生）
+
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+urllib3
+baostock>=0.8.9          # 日线/30min K线 主源（零鉴权）
+akshare>=1.14            # 东财/新浪 基本面与行情（注意频次纪律）
+efinance>=0.5.3          # 东财行情备选源
+pyarrow>=14.0            # parquet K线缓存读写
+openpyxl>=3.1            # Excel 汇总报告
+jinja2>=3.1              # 报告模板渲染
+PyYAML>=6.0              # config.yaml
+python-dotenv>=1.0       # .env（LLM 情感通道等可选配置）
+filelock>=3.13           # Baostock 会话锁

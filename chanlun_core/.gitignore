@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+reports_html/
+*.db
+*.sqlite
+*.parquet
+kline_cache/
+.DS_Store
+# ===== 运行时产物（不入库）=====
+__pycache__/
+*.pyc
+data_cache/
+reports_html/
+*.parquet
+*.db
+*.db-wal
+*.db-shm
+.source_failed_*
+.phase2_results*.json
+.phase2_fresh.marker
+.scanner_cache.json
+logs/
+*.log
+_incremental_probe*
+
+# ===== 备份/临时 =====
+_backup_*/
+*.bak

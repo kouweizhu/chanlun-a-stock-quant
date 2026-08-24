@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 密钥与本地配置
+.env
+
+# 数据缓存（首次运行自动重建）
+chanlun_core/data_cache/
+*.db
+*.parquet
+
+# 运行时标记与输出
+.source_failed_*
+.source_fallback_*
+.news_fallback_*
+.scanner_cache.json
+chanlun_core/signals/
+chanlun_core/reports_html/
+analysis_reports/
+股票池推荐股/
+*.log
+
+# 系统
+.DS_Store
+Thumbs.db

@@ -1,0 +1,128 @@
+# chanlun_core 用户配置文件
+# 覆盖 config_loader.py 中的默认值
+
+weights:
+  tech: 0.35       # 技术面（缠论信号）
+  fund: 0.25       # 基本面（财务数据）
+  alpha: 0.20      # Alpha 因子（跨截面排名）
+  news: 0.10       # 消息面
+  fund_factor: 0.10 # 资金面（五维补扫）
+
+scoring:
+  tech_buy_threshold: 60     # 技术面买入门槛
+  fund_heavy_threshold: 60   # 基本面重仓门槛
+  fund_light_threshold: 40   # 基本面轻仓门槛
+  alpha_buy_threshold: 40    # Alpha 因子最低分（低于此值仅轻仓）v5.3.2(D-4): alpha 收缩映射到[25,75]后, 旧30(池内后30%)等价于新40
+  sell_signal_suppress_days: 10  # v5.3.3(E-1): 近N个自然日内出现一卖/二卖则压制该股全部买入信号(29课: 一卖后应观望)
+  resonance_penalty_threshold: 60  # 共振惩罚阈值
+  severe_penalty: 15          # v5.0 P2: Severe 降级扣分（20→15，避免单季业绩变脸过度惩罚）
+  veto_keywords:             # 一票否决关键词（匹配则 grade=D, pos=0）
+    - 立案调查
+    - 被立案
+    - 证监会立案
+    - 证监会调查
+    - 财务造假
+    - 虚增收入
+    - 虚增利润
+    - 虚假记载
+    - '*ST'
+    - 退市风险警示
+    - 非标审计
+    - 保留意见
+    - 无法表示意见
+    - 涉嫌
+    - 违法违规
+    - 操纵市场
+  severe_keywords:           # 严重降级关键词（匹配则扣 20 分，最多轻仓）
+    - 行政处罚
+    - 公开谴责
+    - 纪律处分
+    - 减持计划
+    - 减持公告
+    - 大股东减持
+    - 业绩预告变脸
+    - 业绩修正
+    - 由盈转亏
+    - 监管措施
+    - 监管关注
+    - 问询函
+  min: -30
+  max: 100
+
+grades:
+  A: 70
+  B: 60
+  C: 50
+
+position:
+  heavy: 0.50     # 重仓仓位比例
+  normal: 0.30    # 正常仓位
+  light: 0.15     # 轻仓仓位
+  none: 0.0
+
+alpha_factor:
+  enabled: true                     # Alpha 因子开关
+  active_factors:
+    - gtja191_002                   # delta(close-position-in-range)     IC=0.0262
+    - gtja191_054                   # neg rank of std|c-o|+corr(c,o)    IC=0.0272
+    - gtja191_111                   # volume-weighted SMA diff          IC=0.0349
+    - gtja191_171                   # microstructure ratio              IC=0.0432 (最强)
+  # v5.4(C-03): 已删除 aggregation:"mean_rank" 死键——alpha_factor_filter
+  # 的 IC 加权聚合是无条件硬编码，无任何代码读取本键（审计C-03）。
+  data_years: 2                     # 取多少年数据
+
+banned:
+  codes:
+    # 个股黑名单（代码直接排除）
+    # - "000002"
+  sectors:
+    # 行业黑名单（行业名包含关键字即排除）
+    # - "房地产"
+    # - "教育培训"
+  auto_ban:
+    st_stock: true           # ST/*ST 自动排除
+    negative_equity: false   # 资不抵债自动排除（银行等除外，暂不开启）
+    revenue_decline_3y: false # 连续3年营收下滑自动排除
+  manual_blacklist:
+    # 人工标记黑名单 — 格式: "股票代码": "排除原因"
+    # 触发条件：
+    #   5. 被立案调查过
+    #   6. 财务造假 / 频繁换所
+    #   7. 非标准审计报告
+    #   8. 高商誉 / 高质押 / 管理层动荡
+    # 示例：
+    # "000000": "立案调查(2025)+非标审计"
+
+a500:
+  score_threshold: 3
+  rev_score_threshold: 3
+  composite_threshold: 60
+  top_n_report: 30
+  batch_count: 5
+  batch_pause: 20
+  news_top_n: 30
+
+backtest:
+  initial_capital: 2000000.0
+  commission: 0.0003
+  stamp_duty: 0.0005    # 卖出印花税 0.05%（v4.2 新增，此前回测未计印花税）
+  max_position_pct: 0.30
+  position_ladder: [0.09, 0.06, 0.03]
+  enable_slippage: true
+
+thresholds:
+  # 缠论核心
+  divergence: 0.7        # 笔级别背驰阈值（离开段面积 < 进入段面积×阈值）
+  second_class_tolerance: 0.01  # 二类买卖点容差（1%）
+  # 线段中枢模块
+  segment_beichi_threshold: 0.8    # 背驰阈值（离开段MACD面积 < 进入段 * 阈值）
+  segment_second_buy_tolerance: 0.01  # 二买容差（1%）
+  segment_max_zhongshu_bi: 27     # 单个中枢最大笔数（9段×3笔/段）
+  segment_max_zhongshu_days: 120  # 中枢最大存活交易日
+  segment_min_fluctuation_pct: 0.05  # 中枢最小波动阈值（5%）
+  # 回测引擎
+  backtest_tp_first: 0.30    # 一类买点止盈比例
+  backtest_tp_second: 0.20  # 二类买点止盈比例
+  backtest_tp_third: 0.15    # 三类买点止盈比例
+  backtest_m30_filter: 3        # 30分钟下跌笔过滤阈值
+  backtest_risk_free_rate: 0.025  # 无风险利率（年化，用于夏普比率）
