@@ -1,0 +1,21 @@
+# ===== 运行时产物（不入库）=====
+__pycache__/
+*.pyc
+data_cache/
+reports_html/
+*.parquet
+.source_failed_*
+.phase2_results*.json
+.scanner_cache.json
+.phase2_fresh.marker
+*.db
+*.log
+_incremental_probe*
+
+# ===== 大文件/备份 =====
+_backup_*/
+*.bak
+
+# ===== 编辑器 =====
+.vscode/
+.idea/
